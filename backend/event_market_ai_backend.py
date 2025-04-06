@@ -11,7 +11,10 @@ app = FastAPI()
 def root():
     return {"message": "Market Insight AI is running!"}
 
-sentiment_analyzer = pipeline("sentiment-analysis")
+sentiment_analyzer = pipeline(
+    "sentiment-analysis",
+    model="distilbert-base-uncased-finetuned-sst-2-english"
+)
 
 NEWS_API_KEY = os.getenv("NEWS_API_KEY", "your_newsapi_key_here")
 
