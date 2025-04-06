@@ -13,7 +13,8 @@ def root():
 
 sentiment_analyzer = pipeline(
     "sentiment-analysis",
-    model="distilbert-base-uncased-finetuned-sst-2-english"
+    model="distilbert-base-uncased-finetuned-sst-2-english",
+    framework="pt"  # Ensure PyTorch is used
 )
 
 NEWS_API_KEY = os.getenv("NEWS_API_KEY", "your_newsapi_key_here")
