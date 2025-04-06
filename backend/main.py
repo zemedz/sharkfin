@@ -1,0 +1,1 @@
+from event_market_ai_backend import app
