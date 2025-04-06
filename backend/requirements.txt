@@ -5,3 +5,4 @@ requests
 pydantic
 yfinance
 torch==2.1.0
+numpy==1.26.4
