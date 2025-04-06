@@ -1,7 +1,7 @@
 fastapi
 uvicorn
-transformers
+transformers==4.33.2
 requests
 pydantic
 yfinance
-torch
+torch==2.1.0
