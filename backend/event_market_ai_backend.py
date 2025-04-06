@@ -11,13 +11,14 @@ app = FastAPI()
 def root():
     return {"message": "Market Insight AI is running!"}
 
-sentiment_analyzer = pipeline(
-    "sentiment-analysis",
-    model="distilbert-base-uncased-finetuned-sst-2-english",
-    framework="pt"  # Ensure PyTorch is used
-)
-
 NEWS_API_KEY = os.getenv("NEWS_API_KEY", "your_newsapi_key_here")
+
+def get_sentiment_model():
+    return pipeline(
+        "sentiment-analysis",
+        model="distilbert-base-uncased-finetuned-sst-2-english",
+        device=-1
+    )
 
 def get_live_news():
     url = "https://newsapi.org/v2/everything"
@@ -61,10 +62,11 @@ class HeadlineInput(BaseModel):
 
 @app.get("/news-insights")
 def news_insights():
+    model = get_sentiment_model()
     headlines = get_live_news()
     insights = []
     for headline in headlines:
-        sentiment = sentiment_analyzer(headline)[0]
+        sentiment = model(headline)[0]
         asset = map_event_to_asset(headline)
         price = get_asset_price(asset)
         insights.append({
@@ -78,7 +80,8 @@ def news_insights():
 
 @app.post("/analyze-headline")
 def analyze_custom_headline(input: HeadlineInput):
-    sentiment = sentiment_analyzer(input.headline)[0]
+    model = get_sentiment_model()
+    sentiment = model(input.headline)[0]
     asset = map_event_to_asset(input.headline)
     price = get_asset_price(asset)
     return {
