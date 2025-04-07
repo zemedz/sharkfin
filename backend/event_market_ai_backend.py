@@ -16,18 +16,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Lazy-loaded model
+model = None
+
+def get_sentiment_model():
+    global model
+    if model is None:
+        model = pipeline(
+            "sentiment-analysis",
+            model="distilbert-base-uncased-finetuned-sst-2-english",
+            device=-1
+        )
+    return model
+
 @app.get("/")
 def root():
     return {"message": "Market Insight AI is running!"}
 
 NEWS_API_KEY = os.getenv("NEWS_API_KEY", "your_newsapi_key_here")
-
-def get_sentiment_model():
-    return pipeline(
-        "sentiment-analysis",
-        model="distilbert-base-uncased-finetuned-sst-2-english",
-        device=-1
-    )
 
 def get_live_news():
     url = "https://newsapi.org/v2/everything"
